@@ -1,0 +1,53 @@
+const url =
+  "http://api.weatherstack.com/current?access_key=0eca776c384e7216337ff44e2ad3be0f&query=11.230000,78.8799&units=f";
+request({ url: url, json: true }, (error, response) => {
+  if (error) {
+    console.log("Unable to connect to weather service");
+  } else if (response.body.error) {
+    console.log(
+      "Unable to find location. Please Enter valid geocode to the endpoint."
+    );
+  } else {
+    console.log(
+      response.body.current.weather_descriptions[0] +
+        ". It is currently " +
+        response.body.current.temperature +
+        " faranheit out. But it feels like " +
+        response.body.current.feelslike +
+        " out there."
+    );
+    console.log(response.body)
+  }
+});
+
+To get another http request we need coordinates. So we use GeoCoding.
+Geocoding is the process of taking an address like (perambalur) and coverting into
+latitude and longitude pair.Once we get the coordinates we pass them into
+weather stack api to get the wather information for that location.
+https://geocode.maps.co/search?q=Perambalur+TN+621212+IN (Forward Geo coding)
+
+Geocoding Part
+
+const url2 = "https://geocode.maps.co/search?q=Perambalur+TN+621212+IN";
+request({ url: url2, json: true }, (error, response) => {
+  if (error) {
+    console.log("Unale to get connection with geocodemaps services.");
+  } else if (response.body.length === 0) {
+    console.log("Unable to get the Geocode. Please enter the valid address.");
+  } else {
+    const lattitude = response.body[0].lat;
+    const longitude = response.body[0].lon;
+    const address = response.body[0].display_name;
+    console.log(
+      "Latitude of " +
+        address +
+        " is " +
+        lattitude +
+        ". Longitude of Perambalur is " +
+        longitude
+    );
+    console.log(response)
+  }
+});
+
+template engine used here is HandleBars.
